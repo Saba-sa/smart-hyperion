@@ -1,4 +1,5 @@
 import { SERVICES } from "@/data/services";
+import { ROLES } from "@/data/roles";
 import { z } from "zod";
 
 export const contactFormSchema = z.object({
@@ -48,6 +49,43 @@ export const contactFormDefs: FormDef[][] = [
       name: "topic",
       type: "select",
       placeholder: "Select a service",
+    },
+  ],
+];
+//For the form in tems page
+export const joinusFormSchema = z.object({
+  name: z.string().min(1, {
+    message: "Please enter your name",
+  }),
+  email: z.string().email({
+    message: "Please enter a valid email address",
+  }),
+  
+  role: z.enum(ROLES, {
+    message: "Please select a role applying for",
+  }),
+ });
+
+export type JoinusFormDataType = z.infer<typeof joinusFormSchema>;
+
+export const joinusFormDefs: FormDef[][] = [
+  [
+    {
+      name: "name",
+      type: "text",
+      placeholder: "Name",
+    },
+    {
+      name: "email",
+      type: "text",
+      placeholder: "Email",
+    },
+  ],
+  [
+    {
+      name: "role",
+      type: "select",
+      placeholder: "Select a role applying for",
     },
   ],
 ];

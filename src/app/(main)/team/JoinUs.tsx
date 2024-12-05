@@ -2,7 +2,7 @@
 
 import { useLocomotiveScroll } from "@/components/LocomotiveScrollContext";
 import { useEffect } from "react";
-
+import ContactUs from "./JoinUsForm"
 export default function JoinUs() {
   const { scroll, isReady } = useLocomotiveScroll();
   useEffect(() => {
@@ -12,5 +12,5 @@ export default function JoinUs() {
     }
   }, [isReady, scroll]);
 
-  return <section id="join" className=""></section>;
+  return <section id="join" className=""><ContactUs/></section>;
 }

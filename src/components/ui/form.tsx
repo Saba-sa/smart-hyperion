@@ -130,7 +130,7 @@ const FormDescription = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
   const { formDescriptionId } = useFormField()
-
+ console.log('form description', formDescriptionId)
   return (
     <p
       ref={ref}
@@ -148,7 +148,7 @@ const FormMessage = React.forwardRef<
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField()
   const body = error ? String(error?.message) : children
-
+console.log('body',body)
   if (!body) {
     return null
   }
