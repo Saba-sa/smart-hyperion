@@ -1,5 +1,5 @@
 "use client";
-
+import ShiftingCountdown from "@/components/Countdown";
 import { useDarkMode } from "@/components/DarkModeSwitch";
 import EncryptButton from "@/components/EncryptButton";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,7 @@ import { LuLoader2, LuX } from "react-icons/lu";
 import {
   startTransition,
   TransitionStartFunction,
+  useActionState,
   useEffect,
   useRef,
   useTransition,
@@ -261,14 +262,18 @@ const ContactForm = ({
 
 const ThankYou = () => {
   return (
+    <div>
+
     <div className="dark:text-blue-200 text-center text-3xl">
       Thank you for contacting us! We will get back to you shortly.
+    </div>
+    <ShiftingCountdown />
     </div>
   );
 };
 
 const ContactUs = () => {
-  const [state, dispatch] = useFormState(sendEmail, {
+  const [state, dispatch] = useActionState(sendEmail, {
     success: false,
   });
   const [isPending, startTransition] = useTransition();

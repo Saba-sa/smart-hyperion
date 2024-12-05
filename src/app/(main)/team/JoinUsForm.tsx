@@ -32,13 +32,13 @@ import { LuLoader2, LuX } from "react-icons/lu";
 import {
   startTransition,
   TransitionStartFunction,
+  useActionState,
   useEffect,
   useRef,
   useTransition,
 } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { Control, useForm } from "react-hook-form";
-
 const lineVariants = {
   hidden: { y: "100%", opacity: 0 }, // Start off-screen and invisible
   visible: {
@@ -179,8 +179,7 @@ const ContactForm = ({
     defaultValues: {
       name: "",
       email: "",
-      role: "Front-end Developer",
-       ...(state?.fields ?? {}),
+        ...(state?.fields ?? {}),
     },
   });
 
@@ -198,11 +197,6 @@ const ContactForm = ({
   const handleSubmit = (data: JoinusFormDataType) => {
     if (formRef.current) {
       const formData = new FormData(formRef.current);
-      console.log("Form data being dispatched:", formData);
-
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
 
       startTransition(() => {
         dispatch(formData);
@@ -261,7 +255,7 @@ const ThankYou = () => {
 };
 
 const ContactUs = () => {
-  const [state, dispatch] = useFormState(sendJoinUsEmail, {
+  const [state, dispatch] = useActionState(sendJoinUsEmail, {
     success: false,
   });
   const [isPending, startTransition] = useTransition();
