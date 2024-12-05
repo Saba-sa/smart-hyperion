@@ -1,0 +1,44 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@import "../../node_modules/locomotive-scroll/dist/locomotive-scroll";
+
+@layer base {
+  :root {
+    --background: 147 197 253;
+    --foreground: 0 0 0;
+    --light-grid: 147, 197, 253;
+    --dark-grid: 2, 6, 23;
+    --primary: 255, 255, 255;
+    --secondary: 0, 0, 0;
+    --cursor-light: 29, 78, 216;
+    --cursor-dark: 29, 78, 216;
+    --nav-menu-bg: #1c1c1c;
+    --footer-bg: rgb(32, 32, 32);
+  }
+  
+  .dark {
+    --background: 15 23 42;
+    --foreground: 255 255 255;
+  }
+  
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    @apply bg-background text-foreground antialiased font-sans;
+  }
+  
+  html {
+    position: relative;
+  }
+}
+
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

@@ -1,0 +1,32 @@
+.gridCard {
+  --border: 2px dashed;
+}
+
+.gridCard:not(:last-child) {
+  border-bottom: var(--border);
+}
+
+@media screen(md) {
+  .gridCard:nth-child(n) {
+    border: none;
+  }
+  .gridCard:nth-child(odd) {
+    border-right: var(--border);
+  }
+  .gridCard:not(:nth-last-child(-n + 2)) {
+    border-bottom: var(--border);
+  }
+}
+
+@media screen(lg) {
+  .gridCard:nth-child(n) {
+    border: none
+  }
+  .gridCard:nth-child(-n + 3) {
+    border-bottom: var(--border);
+  }
+
+  .gridCard:not(:nth-child(3n)) {
+    border-right: var(--border);
+  }
+}

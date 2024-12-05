@@ -1,0 +1,7 @@
+.serviceCard {
+    --border: 2px dashed;
+}
+
+.serviceCard:not(:last-child) {
+    border-bottom: var(--border);
+}

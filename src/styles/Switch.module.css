@@ -1,0 +1,44 @@
+.switch {
+  width: 80px;
+  height: 40px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 50px;
+  padding: 5px;
+  cursor: pointer;
+  animation: fade-in 1s ease-out forwards;
+  animation-delay: 1s;
+  opacity: 1;
+}
+
+.switch[data-isOn="true"] {
+  justify-content: flex-end;
+}
+
+.switchLight {
+  /* box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px; */
+  background-color: white;
+}
+
+.switchDark {
+  background-color: rgb(24 24 27 / 1);
+}
+
+.handle {
+  width: 30px;
+  height: 30px;
+  border-radius: 40px;
+}
+
+.handleLight {
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.handleDark {
+  background-color: black;
+  color: white;
+  box-shadow: rgba(224, 221, 221, 0.16) 0px 1px 4px;
+}
