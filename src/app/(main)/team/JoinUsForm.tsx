@@ -1,5 +1,5 @@
 "use client";
-import ShiftingCountdown from "@/components/Countdown";
+
 import { useDarkMode } from "@/components/DarkModeSwitch";
 import EncryptButton from "@/components/EncryptButton";
 import { Button } from "@/components/ui/button";
@@ -18,13 +18,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { SERVICES } from "@/data/services";
-import { FormState, sendEmail } from "@/lib/actions";
+ import { ROLES } from "@/data/roles";
+import { FormState, sendJoinUsEmail } from "@/lib/actionsJoinus";
 import {
-  ContactFormDataType,
-  contactFormDefs,
-  contactFormSchema,
+   JoinusFormDataType,
+   joinusFormDefs,
+  joinusFormSchema,
   FormDef,
 } from "@/lib/contactForm";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,7 +39,6 @@ import {
 } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { Control, useForm } from "react-hook-form";
-
 const lineVariants = {
   hidden: { y: "100%", opacity: 0 }, // Start off-screen and invisible
   visible: {
@@ -55,8 +53,8 @@ const lineVariants = {
 };
 
 interface ContactInputProps {
-  control: Control<ContactFormDataType>;
-  name: keyof ContactFormDataType;
+  control: Control<JoinusFormDataType>;
+  name: keyof JoinusFormDataType;
   placeholder: string;
   disabled: boolean;
 }
@@ -100,9 +98,9 @@ const ContactServicesInput = ({
       name={name}
       render={({ field }) => {
         const { ref, ...rest } = field;
-        return (
+         return (
           <FormItem>
-            <Select {...rest} onValueChange={field.onChange}>
+            <Select {...rest}  onValueChange={(value) => {field.onChange(value); }}>
               <FormControl>
                 <SelectTrigger
                   disabled={disabled}
@@ -115,7 +113,7 @@ const ContactServicesInput = ({
                 </SelectTrigger>
               </FormControl>
               <SelectContent className="bg-white dark:bg-neutral-900 border border-gray-700">
-                {SERVICES.map((s, i) => (
+                {ROLES.map((s, i) => (
                   <SelectItem
                     className="cursor-pointer text-lg"
                     value={s}
@@ -136,14 +134,14 @@ const ContactServicesInput = ({
 
 const renderInput = (
   input: FormDef,
-  control: Control<ContactFormDataType>,
+  control: Control<JoinusFormDataType>,
   disabled: boolean
 ) => {
   if (input.type === "select") {
     return (
       <ContactServicesInput
         control={control}
-        name={input.name as keyof ContactFormDataType}
+        name={input.name as keyof JoinusFormDataType}
         placeholder={input.placeholder}
         disabled={disabled}
       />
@@ -152,7 +150,7 @@ const renderInput = (
     return (
       <ContactTextInput
         control={control}
-        name={input.name as keyof ContactFormDataType}
+        name={input.name as keyof JoinusFormDataType}
         placeholder={input.placeholder}
         disabled={disabled}
       />
@@ -176,21 +174,19 @@ const ContactForm = ({
   const darkMode = useDarkMode();
 
   const formRef = useRef<HTMLFormElement>(null);
-  const form = useForm<ContactFormDataType>({
-    resolver: zodResolver(contactFormSchema),
+  const form = useForm<JoinusFormDataType>({
+    resolver: zodResolver(joinusFormSchema),
     defaultValues: {
       name: "",
       email: "",
-      business: "",
-      message: "",
-      ...(state?.fields ?? {}),
+        ...(state?.fields ?? {}),
     },
   });
 
   useEffect(() => {
     if (!state.success && state.issues) {
       state.issues.forEach(({ field, error }) => {
-        form.setError(field as keyof ContactFormDataType, {
+        form.setError(field as keyof JoinusFormDataType, {
           type: "manual",
           message: error,
         });
@@ -198,21 +194,28 @@ const ContactForm = ({
     }
   }, [state, form]);
 
+  const handleSubmit = (data: JoinusFormDataType) => {
+    if (formRef.current) {
+      const formData = new FormData(formRef.current);
+
+      startTransition(() => {
+        dispatch(formData);
+      });
+    }
+  };
+
+
+
   return (
     <Form {...form}>
       <form
         action={dispatch}
         className="space-y-3"
         ref={formRef}
-        onSubmit={(e) => {
-          form.handleSubmit(() => {
-            startTransition(() => {
-              dispatch(new FormData(formRef.current!));
-            });
-          })(e);
-        }}
+        onSubmit={form.handleSubmit(handleSubmit)}
+
       >
-        {contactFormDefs.map((row, ri) => (
+        {joinusFormDefs.map((row, ri) => (
           <div key={ri} className="flex gap-3 md:flex-row flex-col h-full">
             {row.map((input, i) => (
               <div key={i} className="md:w-1/2">
@@ -221,24 +224,7 @@ const ContactForm = ({
             ))}
           </div>
         ))}
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Textarea
-                  disabled={isPending}
-                  className="py-3 px-4 resize-none formShadow md:text-lg w-full bg-white dark:bg-neutral-900 border focus:border-blue-500 border-gray-700 dark:border-neutral-200 placeholder:text-neutral-500"
-                  placeholder="Type Your Message"
-                  rows={15}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage className="text-red-500" />
-            </FormItem>
-          )}
-        />
+        
         <div className="text-center">
           <EncryptButton type="submit" isLoading={isPending}>
             Submit
@@ -262,18 +248,14 @@ const ContactForm = ({
 
 const ThankYou = () => {
   return (
-    <div>
-
     <div className="dark:text-blue-200 text-center text-3xl">
-      Thank you for contacting us! We will get back to you shortly.
-    </div>
-    <ShiftingCountdown />
+      Thank you for showing intrest in joining us! We will get back to you shortly.
     </div>
   );
 };
 
 const ContactUs = () => {
-  const [state, dispatch] = useActionState(sendEmail, {
+  const [state, dispatch] = useActionState(sendJoinUsEmail, {
     success: false,
   });
   const [isPending, startTransition] = useTransition();
@@ -319,5 +301,6 @@ const ContactUs = () => {
     </div>
   );
 };
+
 
 export default ContactUs;
